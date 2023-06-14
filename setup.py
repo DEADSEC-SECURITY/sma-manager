@@ -15,7 +15,7 @@ README = (pathlib.Path(__file__).parent / "README.md").read_text(encoding='utf8'
 setup(
     name='sma-manager',
     packages=find_packages(),
-    version='1.0.0',
+    version='2.0.0',
     description='Package for collecting information from the SMA Manager device of solar panels.',
     long_description=README,
     long_description_content_type='text/markdown',
