@@ -5,3 +5,5 @@
 #  Email: amng835@gmail.com
 #  LinkedIn: https://www.linkedin.com/in/antonio-manuel-goncalves-983926142/
 #  Github: https://github.com/DEADSEC-SECURITY
+
+from .SMA import SMA
