@@ -2,8 +2,6 @@
 
 [![CodeQL](https://github.com/DEADSEC-SECURITY/sma-manager/actions/workflows/codeql.yml/badge.svg)](https://github.com/DEADSEC-SECURITY/sma-manager/actions/workflows/codeql.yml) 
 
-[![Downloads](https://pepy.tech/badge/sma-manager)](https://pepy.tech/project/sma-manager) [![Downloads](https://pepy.tech/badge/sma-manager/week)](https://pepy.tech/project/sma-manager) [![Downloads](https://pepy.tech/badge/sma-manager/month)](https://pepy.tech/project/sma-manager)
-
 ![PyPI - Downloads](https://img.shields.io/pypi/dd/sma-manager?label=Daily%20Downloads&style=flat-square) ![PyPI - Downloads](https://img.shields.io/pypi/dw/sma-manager?label=Weekly%20Downloads&style=flat-square) ![PyPI - Downloads](https://img.shields.io/pypi/dm/sma-manager?label=Monthly%20Downloads&style=flat-square)
 
 ## 📝 CONTRIBUTIONS
