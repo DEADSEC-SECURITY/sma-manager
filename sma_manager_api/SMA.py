@@ -10,6 +10,7 @@
 
 # Built-In Imports
 import socket
+import asyncio
 import struct
 from datetime import timedelta
 from typing import Any
@@ -17,17 +18,21 @@ from typing import Any
 SMA_BUFFER_SIZE = 10240
 
 
-def create_multicast_socket(ip: str, port: int, timeout: int = 5):
+def create_multicast_socket(ip: str, port: int, timeout: int = 5, async_: bool = False):
     """
     Creates and returns a socket
     """
-
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind(("", port))
     mreq = struct.pack("4sl", socket.inet_aton(ip), socket.INADDR_ANY)
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
-    sock.settimeout(timeout)
+
+    if async_:
+        sock.setblocking(False)
+    else:
+        sock.settimeout(timeout)
+
     return sock
 
 
@@ -79,11 +84,11 @@ class SMA:
         self._serial_number = self._data[20:24].hex()
         self._available = True
 
-    def _get_socket(self):
+    def _get_socket(self, async_: bool = False):
         """
         Creates and returns a socker for the SMA Manager
         """
-        return create_multicast_socket(self._ip, self._port)
+        return create_multicast_socket(self._ip, self._port, async_=async_)
 
     def _load_data(self):
         """
@@ -94,6 +99,19 @@ class SMA:
         sock = self._get_socket()
         try:
             self._data = sock.recv(SMA_BUFFER_SIZE)
+        finally:
+            sock.close()
+
+    async def _async_load_data(self):
+        """
+        Gets data from socket and saves it
+
+        @return: bool
+        """
+        sock = self._get_socket(async_=True)
+        loop = asyncio.get_event_loop()
+        try:
+            self._data = await loop.sock_recv(sock, SMA_BUFFER_SIZE)
         finally:
             sock.close()
 
@@ -157,17 +175,8 @@ class SMA:
     def phase_three_feed(self):
         return self._phase_three_feed
 
-    async def refresh_data(self):
-        """
-        Refreshes the data
-
-        @return:
-        """
-        try:
-            self._load_data()
-        except TimeoutError:
-            self._available = False
-            return
+    def _refresh_data(self):
+        """Updates variables values from self._data value"""
 
         self._available = True
         self._grid_consumption = _bytes_to_power(self._data[34:36])
@@ -178,3 +187,27 @@ class SMA:
         self._phase_two_feed = _bytes_to_power(self._data[308:452][26:28])
         self._phase_three_consumption = _bytes_to_power(self._data[452:596][6:8])
         self._phase_three_feed = _bytes_to_power(self._data[452:596][26:28])
+
+    def refresh_data(self):
+        """
+        Refreshes the data
+
+        @return:
+        """
+        try:
+            self._load_data()
+            self._refresh_data()
+        except TimeoutError:
+            self._available = False
+
+    async def async_refresh_data(self):
+        """
+        Refreshes the data
+
+        @return:
+        """
+        try:
+            await self._async_load_data()
+            self._refresh_data()
+        except TimeoutError:
+            self._available = False

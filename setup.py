@@ -10,25 +10,19 @@
 from setuptools import find_packages, setup
 import pathlib
 
-README = (pathlib.Path(__file__).parent / "README.md").read_text(encoding='utf8')
+README = (pathlib.Path(__file__).parent / "README.md").read_text(encoding="utf8")
 
 setup(
-    name='sma-manager',
+    name="sma-manager",
     packages=find_packages(),
-    version='2.0.0',
-    description='Package for collecting information from the SMA Manager device of solar panels.',
+    version="2.0.0",
+    description="Package for collecting information from the SMA Manager device of solar panels.",
     long_description=README,
-    long_description_content_type='text/markdown',
-    author='DeadSec-Security',
-    author_email='amng835@gmail.com',
-    url='https://github.com/DEADSEC-SECURITY/sma-manager',
-    keywords=[
-        'sma',
-        'sma-manager',
-        'manager',
-        'sunny-portal',
-        'sunny'
-    ],
-    license='MIT',
-    python_requires='>=3.8'
+    long_description_content_type="text/markdown",
+    author="DeadSec-Security",
+    author_email="amng835@gmail.com",
+    url="https://github.com/DEADSEC-SECURITY/sma-manager",
+    keywords=["sma", "sma-manager", "manager", "sunny-portal", "sunny"],
+    license="MIT",
+    python_requires=">=3.8",
 )
